@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: react-sneakers
-        image: your-dockerhub-username/react-sneakers-app
+        image: gopu1234/sneakers-app
         ports:
         - containerPort: 3000
 
