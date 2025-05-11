@@ -51,7 +51,7 @@ pipeline {
                 sh "docker push gopu1234/sneakers-app"
             }
         }
-		stage('Trivy Scan') {
+        stage('Trivy Scan') {
             steps {
                 sh ' trivy image --format table -o report.html gopu1234/sneakers-app || true'
             }
