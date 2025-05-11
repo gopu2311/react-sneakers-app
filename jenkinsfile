@@ -39,10 +39,7 @@ pipeline {
 
         stage('Push Image and Trivy') {
             steps {
-                sh '''
-                    docker build -t gopu1234/sneakers-app .
-                    trivy image --format table -o report.html gopu1234/sneakers-app || true
-                '''
+                sh ' docker build -t gopu1234/sneakers-app . '
             }
         }
 
@@ -52,6 +49,11 @@ pipeline {
                     sh "echo ${dockerhubtoken} | docker login -u gopu1234 --password-stdin"
                 }
                 sh "docker push gopu1234/sneakers-app"
+            }
+        }
+		stage('Trivy Scan') {
+            steps {
+                sh ' trivy image --format table -o report.html gopu1234/sneakers-app || true'
             }
         }
 
