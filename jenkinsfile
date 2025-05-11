@@ -1,0 +1,65 @@
+pipeline {
+    agent any
+
+    environment {
+        KUBECONFIG = '/var/lib/jenkins/.kube/config'
+        SONAR_HOME = tool name: 'Sonar'
+    }
+
+    stages {
+        stage('Clone') {
+            steps {
+                git url: 'https://github.com/gopu2311/react-sneakers-app.git', branch: 'main'
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('Sonar') {
+                    withCredentials([string(credentialsId: 'sonar', variable: 'SONAR_TOKEN')]){
+                        sh '''
+                            ${SONAR_HOME}/bin/sonar-scanner \
+                            -Dsonar.projectKey=sneakers-app \
+                            -Dsonar.projectName=Sneakers-app \
+                            -Dsonar.sources=. \
+                            -Dsonar.token=$SONAR_TOKEN
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('SonarQube Quality Gate') {
+            steps {
+                timeout(time: 2, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: false
+                }
+            }
+        }
+
+        stage('Trivy Scan') {
+            steps {
+                sh '''
+                    docker build -t gopu1234/sneakers-app .
+                    trivy image --format table --severity HIGH,CRITICAL gopu1234/sneakers-app || true
+                '''
+            }
+        }
+
+        stage('Push Docker image') {
+            steps {
+                withCredentials([string(credentialsId: 'dockerhub-creds', variable: 'dockerhubtoken')]) {
+                    sh "echo ${dockerhubtoken} | docker login -u gopu1234 --password-stdin"
+                }
+                sh "docker push gopu1234/sneakers-app"
+            }
+        }
+
+        stage("Deploy to Kubernetes") {
+            steps {
+                sh "kubectl apply -f k8s/deployment.yaml"
+                sh "kubectl apply -f k8s/service.yaml"
+            }
+        }
+    }
+}
