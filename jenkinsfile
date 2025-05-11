@@ -37,11 +37,11 @@ pipeline {
             }
         }
 
-        stage('Trivy Scan') {
+        stage('Push Image and Trivy') {
             steps {
                 sh '''
                     docker build -t gopu1234/sneakers-app .
-                    trivy image --format table --severity HIGH,CRITICAL gopu1234/sneakers-app || true
+                    trivy image --format table -o report.html gopu1234/sneakers-app || true
                 '''
             }
         }
