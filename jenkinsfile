@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        KUBECONFIG = '/var/lib/jenkins/.kube/config'
+        KUBECONFIG = '/home/ubuntu/.kube/config'
         SONAR_HOME = tool name: 'Sonar'
     }
 
@@ -31,15 +31,15 @@ pipeline {
 
         stage('SonarQube Quality Gate') {
             steps {
-                timeout(time: 2, unit: 'MINUTES') {
+                timeout(time: 5, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: false
                 }
             }
         }
 
-        stage('Push Image and Trivy') {
+        stage('Push Image') {
             steps {
-                sh ' docker build -t gopu1234/sneakers-app . '
+                sh 'docker build -t gopu1234/sneakers-app . '
             }
         }
 
@@ -54,6 +54,7 @@ pipeline {
         stage('Trivy Scan') {
             steps {
                 sh ' trivy image --format table -o report.html gopu1234/sneakers-app || true'
+                archiveArtifacts artifacts: 'report.html', allowEmptyArchive: true
             }
         }
 
