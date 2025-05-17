@@ -42,26 +42,27 @@ pipeline {
                 sh 'docker build -t gopu1234/sneakers-app . '
             }
         }
-
-        stage('Push Docker image') {
-            steps {
-                withCredentials([string(credentialsId: 'dockerhub-creds', variable: 'dockerhubtoken')]) {
-                    sh "echo ${dockerhubtoken} | docker login -u gopu1234 --password-stdin"
-                }
-                sh "docker push gopu1234/sneakers-app"
-            }
-        }
         stage('Trivy Scan') {
             steps {
                 sh ' trivy image --format table -o report.html gopu1234/sneakers-app || true'
                 archiveArtifacts artifacts: 'report.html', allowEmptyArchive: true
             }
-        }
+        }    
 
-        stage("Deploy to Kubernetes") {
+        stage('Push Docker image') {
             steps {
-                sh "kubectl apply -f k8s/deployment.yaml"
-                sh "kubectl apply -f k8s/service.yaml"
+                withCredentials([string(credentialsId: 'dockerhub-creds', variable: 'dockerhubtoken')]) {
+                    sh 'echo ${dockerhubtoken} | docker login -u gopu1234 --password-stdin'
+                }
+                sh 'docker push gopu1234/sneakers-app'
+            }
+        }
+        
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh 'kubectl apply -f k8s/deployment.yaml'
+                sh 'kubectl apply -f k8s/service.yaml'
             }
         }
     }
