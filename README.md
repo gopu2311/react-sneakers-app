@@ -6,11 +6,11 @@ This repository contains a React-based Sneakers e-commerce application enhanced 
 
 ## About
 
-This project started as a React-based Sneakers e-commerce app and enhanced the project by creating a complete DevOps pipeline and deployment setup from scratch, transforming it into a fully automated, secure, and production-ready cloud-native application.
+This project started as a React-based Sneakers e-commerce app and enhanced the project by creating a complete DevOps pipeline and deployment setup from scratch, transforming it into a fully automated, secure, and production-ready cloud-native application
 
 ---
 
-## Key Features & Enhancements
+## Key Features & Enhancement
 
 - **Continuous Integration and Delivery (CI/CD) with Jenkins**  
   Automated build, test, and deployment triggered on every code push to GitHub.
