@@ -52,24 +52,3 @@ This project started as a React-based Sneakers e-commerce app and enhanced the p
   Entire pipeline from GitHub commits → Jenkins CI → Docker build → Quality & security scans → Docker Hub push → Argo CD deployment.
 
 ---
-
-## Architecture Diagram
-
-```plaintext
-GitHub Repo
-    ↓
-Jenkins CI Pipeline
-    ↓
-Clone Code
-    ↓
-SonarQube Code Analysis & Quality Gate
-    ↓
-Build Docker Image
-    ↓
-Trivy Vulnerability Scan
-    ↓
-Push Docker Image to Docker Hub
-    ↓
-Argo CD Sync (Automated Deployment)
-    ↓
-Deploy to Kubernetes (EKS)
