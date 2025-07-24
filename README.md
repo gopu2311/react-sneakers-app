@@ -3,7 +3,27 @@
 This repository contains a React-based Sneakers e-commerce application enhanced with a full end-to-end DevOps pipeline and production-grade deployment using Jenkins, Docker, SonarQube, Trivy, Kubernetes (EKS), and Argo CD.
 
 ---
+## Architecture Diagram
 
+```plaintext
+GitHub Repo
+    ↓
+Jenkins CI Pipeline
+    ↓
+Clone Code
+    ↓
+SonarQube Code Analysis & Quality Gate
+    ↓
+Build Docker Image
+    ↓
+Trivy Vulnerability Scan
+    ↓
+Push Docker Image to Docker Hub
+    ↓
+Argo CD Sync (Automated Deployment)
+    ↓
+Deploy to Kubernetes (EKS)
+```
 ## About
 
 This project started as a React-based Sneakers e-commerce app and enhanced the project by creating a complete DevOps pipeline and deployment setup from scratch, transforming it into a fully automated, secure, and production-ready cloud-native application
